@@ -2,8 +2,6 @@ const express = require("express");
 const databaseInteraction = require("../../prisma");
 const router = express.Router();
 
-//Consultas en la base de datos 1
-
 router.get("/login", async (req, res) => {
   //   const { email, password } = req.body;
   const { email } = req.body;
@@ -13,23 +11,38 @@ router.get("/login", async (req, res) => {
       email,
     },
   });
+
+  return res.status(200).json(response);
 });
 
-//Cosultas en la base de datos 1 y 4
 router.post("/register", async (req, res) => {
-  const { email, password, cycle, carrer, headquarter } = req.body;
+  try {
+    const { email, password, cycle, carrer, headquarter } = req.body;
 
-  const response = await databaseInteraction.user.create({
-    data: {
-      email,
-      password,
-      cycle,
-      carrer,
-      headquarter,
-    },
-  });
+    const response1 = await databaseInteraction.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-  res.status(200).json(response);
+    //   Si ya existe el usuario se corta la ejecución aquí y retorna el usuario
+    if (response1) return res.status(200).json({ existed: true });
+
+    //De lo contrario, o sea de no existir, lo crea y retorna
+    const response2 = await databaseInteraction.user.create({
+      data: {
+        email,
+        password,
+        cycle,
+        carrer,
+        headquarter,
+      },
+    });
+
+    return res.status(200).json({ existed: false, ...response2 });
+  } catch (error) {
+    console.log("Error en consulta de registro", error);
+  }
 });
 
 module.exports = router;
