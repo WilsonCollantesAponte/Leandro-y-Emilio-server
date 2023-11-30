@@ -2,6 +2,7 @@ const express = require("express");
 const databaseInteraction = require("../../prisma");
 const router = express.Router();
 
+//Login route - Post
 router.post("/login", async (req, res) => {
   //   const { email, password } = req.body;
   try {
@@ -20,6 +21,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+//Register route - Post
 router.post("/register", async (req, res) => {
   try {
     const { email, password, cycle, carrer, headquarter } = req.body;
