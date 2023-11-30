@@ -2,7 +2,7 @@ const express = require("express");
 const databaseInteraction = require("../../prisma");
 const router = express.Router();
 
-router.get("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   //   const { email, password } = req.body;
   try {
     const { email } = req.body;
