@@ -4,15 +4,20 @@ const router = express.Router();
 
 router.get("/login", async (req, res) => {
   //   const { email, password } = req.body;
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  const response = await databaseInteraction.user.findUnique({
-    where: {
-      email,
-    },
-  });
+    const response = await databaseInteraction.user.findUnique({
+      where: {
+        email,
+      },
+    });
 
-  return res.status(200).json(response);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log("Error en consulta de Login", error);
+    return res.status(500).json({ message: "Error en login", error });
+  }
 });
 
 router.post("/register", async (req, res) => {
@@ -42,6 +47,7 @@ router.post("/register", async (req, res) => {
     return res.status(200).json({ existed: false, ...response2 });
   } catch (error) {
     console.log("Error en consulta de registro", error);
+    return res.status(500).json({ message: "Error en Register", error });
   }
 });
 
